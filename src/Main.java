@@ -1,3 +1,5 @@
+import adapter.card.HDFCAdapter;
+import adapter.upi.PhonePeAdapter;
 import model.Driver;
 import model.Ride;
 import model.Rider;
@@ -28,9 +30,13 @@ public class Main {
         rs.addDriver(d1);
         rs.addDriver(d2);
 
-        rs.requestRide(r1,"Airport","Benz Circle",14.0,new NormalFare(),new UpiPayment("9999999999@ybl"));
-        rs.requestRide(r2,"PVP","Kalakshetram",10,new SurgeFare(),new CashPayment());
-        rs.requestRide(r3,"PVR","KVR market",36,new SurgeFare(),new CardPayment("1499090"));
+        PaymentStrategy hdfcCard=new HDFCAdapter("124463474");
+        PaymentStrategy phonePeUpi=new PhonePeAdapter("9897899009@ybl");
+        PaymentStrategy cash=new CashPayment();
+
+        rs.requestRide(r1,"Airport","Benz Circle",14.0,new NormalFare(),hdfcCard);
+        rs.requestRide(r2,"PVP","Kalakshetram",10,new SurgeFare(),phonePeUpi);
+        rs.requestRide(r3,"PVR","KVR market",36,new SurgeFare(),cash);
 
         System.out.println("All Rides - ONGOING");
         rs.getAllRides().forEach(System.out::println);

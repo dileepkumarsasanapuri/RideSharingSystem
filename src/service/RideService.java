@@ -18,7 +18,7 @@ public class RideService {
 
     private NotificationService nfs=new NotificationService();
     private DriverMatchingStrategy dms;
-
+    private PaymentStrategy psr;
     public RideService(DriverMatchingStrategy dms){
         this.dms=dms;
     }
@@ -52,9 +52,10 @@ public class RideService {
                 .setDistance(14.3)
                 .setSource("MG Road")
                 .setDest("Airport")
-                .setFareStrategy(new NormalFare())
-                .setPaymentStrategy(new CashPayment())
+                .setFareStrategy(fsr)
+                .setPaymentStrategy(psr)
                 .build();
+
 
         rides.add(ride);
 
@@ -69,6 +70,7 @@ public class RideService {
 
         nfs.notify(ride.getRider(),"Ride Completed ! Ride Id:"+ride.getRideId()+" with Driver "+ride.getDriver().getName()+"Pay Fare: "+ride.getFare());
         nfs.notify(dr,"Ride Completed! Ride Id:"+ride.getRideId()+" Recieve amount of Rs."+ride.getFare());
+        ride.getPaystr().pay(ride.getFare());
     }
     public List<Ride> getAllRides(){
         return rides;

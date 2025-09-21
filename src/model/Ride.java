@@ -57,9 +57,10 @@ public class Ride {
         this.status=RideStatus.COMPLETED;
     }
 
-    public void makePayment(){
-        paystr.pay(fare);
+    public PaymentStrategy getPaystr() {
+        return paystr;
     }
+
     @Override
     public String toString() {
         return "Ride {" +
