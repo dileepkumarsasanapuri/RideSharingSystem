@@ -34,16 +34,19 @@ public class Main {
         PaymentStrategy phonePeUpi=new PhonePeAdapter("9897899009@ybl");
         PaymentStrategy cash=new CashPayment();
 
-        rs.requestRide(r1,"Airport","Benz Circle",14.0,new NormalFare(),hdfcCard);
-        rs.requestRide(r2,"PVP","Kalakshetram",10,new SurgeFare(),phonePeUpi);
-        rs.requestRide(r3,"PVR","KVR market",36,new SurgeFare(),cash);
+        rs.requestRide(r1,"Airport","Benz Circle",14.0,new NormalFare());
+        rs.requestRide(r2,"PVP","Kalakshetram",10,new SurgeFare());
+        rs.requestRide(r3,"PVR","KVR market",36,new SurgeFare());
 
         System.out.println("All Rides - ONGOING");
         rs.getAllRides().forEach(System.out::println);
 
-        for(Ride ride:rs.getAllRides()){
-            rs.completeRide(ride);
-        }
+        rs.completeRide(rs.getAllRides().get(0),"card","hdfc","28376786");
+        rs.completeRide(rs.getAllRides().get(1),"upi","gpay","18489320859");
+
+        System.out.println("\nAll Rides - COMPLETED");
+        rs.getAllRides().forEach(System.out::println);
+
 
     }
 }

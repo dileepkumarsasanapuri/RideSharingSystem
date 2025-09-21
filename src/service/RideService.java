@@ -1,4 +1,6 @@
 package service;
+import factory.CardPaymentFactory;
+import factory.UPIPaymentFactory;
 import model.*;
 import observer.NotificationService;
 import strategy.fare.FareStrategy;
@@ -18,7 +20,7 @@ public class RideService {
 
     private NotificationService nfs=new NotificationService();
     private DriverMatchingStrategy dms;
-    private PaymentStrategy psr;
+
     public RideService(DriverMatchingStrategy dms){
         this.dms=dms;
     }
@@ -30,7 +32,7 @@ public class RideService {
     public void addDriver(Driver driver) {
         drivers.add(driver);
     }
-    public void requestRide(Rider rider,String src,String dest,double distance,FareStrategy fsr,PaymentStrategy psr){
+    public void requestRide(Rider rider,String src,String dest,double distance,FareStrategy fsr){
 
         List<Driver> availableDrivers=drivers.stream()
                 .filter(Driver::isAvailable)
@@ -53,7 +55,6 @@ public class RideService {
                 .setSource("MG Road")
                 .setDest("Airport")
                 .setFareStrategy(fsr)
-                .setPaymentStrategy(psr)
                 .build();
 
 
@@ -63,14 +64,23 @@ public class RideService {
         nfs.notify(matchedDriver,"New Ride Assigned! Ride Id:"+rideId+" Pick rider "+rider.getName()+" at "+src+" dropping at "+dest);
     }
 
-    public void completeRide(Ride ride){
+    public void completeRide(Ride ride,String typeofPayment,String carrier,String payid){
         ride.completeRide();
         Driver dr=ride.getDriver();
         dr.setAvailable(true);
-
         nfs.notify(ride.getRider(),"Ride Completed ! Ride Id:"+ride.getRideId()+" with Driver "+ride.getDriver().getName()+"Pay Fare: "+ride.getFare());
         nfs.notify(dr,"Ride Completed! Ride Id:"+ride.getRideId()+" Recieve amount of Rs."+ride.getFare());
-        ride.getPaystr().pay(ride.getFare());
+
+        PaymentStrategy paystr;
+        switch (typeofPayment.toLowerCase()){
+            case "card" -> paystr= CardPaymentFactory.createCardpayment(carrier,payid);
+            case "upi" -> paystr= UPIPaymentFactory.createUPIPayment(carrier,payid);
+            case "cash"-> paystr=new CashPayment();
+            default -> throw new IllegalArgumentException("Unsupported Payment Type: "+typeofPayment);
+        }
+
+        paystr.pay(ride.getFare());
+
     }
     public List<Ride> getAllRides(){
         return rides;

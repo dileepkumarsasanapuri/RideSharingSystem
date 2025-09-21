@@ -2,7 +2,7 @@ package model;
 
 import strategy.fare.FareStrategy;
 import strategy.fare.NormalFare;
-import strategy.payment.PaymentStrategy;
+
 public class Ride {
     private String rideId;
     private Rider rider;
@@ -13,7 +13,7 @@ public class Ride {
     private String source;
     private String dest;
     private FareStrategy farestr;
-    private PaymentStrategy paystr;
+
     public Ride(RideBuilder builder){
         this.distance=builder.distance;
         this.rider=builder.rider;
@@ -22,7 +22,7 @@ public class Ride {
         this.rideId=builder.rideId;
         this.driver=builder.driver;
         this.farestr=builder.farestr;
-        this.paystr=builder.paystr;
+
         this.status=RideStatus.ONGOING;
         this.fare=farestr.calculateFare(distance);
     }
@@ -57,9 +57,7 @@ public class Ride {
         this.status=RideStatus.COMPLETED;
     }
 
-    public PaymentStrategy getPaystr() {
-        return paystr;
-    }
+
 
     @Override
     public String toString() {
@@ -81,7 +79,7 @@ public class Ride {
         private String source;
         private String dest;
         private FareStrategy farestr;
-        private PaymentStrategy paystr;
+
 
         public RideBuilder setRiderId(String riderId){
             this.rideId=riderId;
@@ -115,13 +113,11 @@ public class Ride {
             return this;
         }
 
-        public RideBuilder setPaymentStrategy(PaymentStrategy paystr) {
-            this.paystr = paystr;
-            return this;
-        }
+
         public Ride build(){
             if(farestr==null) farestr=new NormalFare();
-            if(rider==null || driver==null ||paystr==null){
+
+            if(rider==null || driver==null){
                 throw  new IllegalStateException("Missing required fields for Ride");
             }
             return new Ride(this);
