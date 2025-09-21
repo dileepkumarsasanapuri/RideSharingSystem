@@ -1,5 +1,6 @@
 package observer;
 
+
 import java.util.ArrayList;
 import java.util.List;
 public class NotificationService {
@@ -14,4 +15,9 @@ public class NotificationService {
             ob.update(msg);
         }
     }
+    public void notify(Notifier dr,String msg){
+        dr.update(msg);
+    }
+
+
 }

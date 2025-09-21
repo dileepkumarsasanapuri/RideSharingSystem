@@ -1,6 +1,8 @@
 package model;
 
-public class Driver extends User{
+import observer.Notifier;
+
+public class Driver extends User implements Notifier {
     private String licenseNo;
     private double rating;
     private boolean available;
@@ -30,6 +32,10 @@ public class Driver extends User{
     @Override
     public String toString(){
         return "Driver: "+name+"of rating: "+rating+" , "+vehicleModel+" - "+vehicleNo+" ";
+    }
+    @Override
+    public void update(String msg) {
+        System.out.println("Driver " + name + " got notification: " + msg);
     }
 }
 
