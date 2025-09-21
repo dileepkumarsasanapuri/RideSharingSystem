@@ -1,6 +1,7 @@
 package model;
 
 import strategy.fare.FareStrategy;
+import strategy.fare.NormalFare;
 import strategy.payment.PaymentStrategy;
 public class Ride {
     private String rideId;
@@ -13,15 +14,15 @@ public class Ride {
     private String dest;
     private FareStrategy farestr;
     private PaymentStrategy paystr;
-    public Ride(String rideId,Rider rider,Driver driver,double distance,String source,String dest,FareStrategy farestr,PaymentStrategy paystr){
-        this.distance=distance;
-        this.rider=rider;
-        this.source=source;
-        this.dest=dest;
-        this.rideId=rideId;
-        this.driver=driver;
-        this.farestr=farestr;
-        this.paystr=paystr;
+    public Ride(RideBuilder builder){
+        this.distance=builder.distance;
+        this.rider=builder.rider;
+        this.source=builder.source;
+        this.dest=builder.dest;
+        this.rideId=builder.rideId;
+        this.driver=builder.driver;
+        this.farestr=builder.farestr;
+        this.paystr=builder.paystr;
         this.status=RideStatus.ONGOING;
         this.fare=farestr.calculateFare(distance);
     }
@@ -61,7 +62,7 @@ public class Ride {
     }
     @Override
     public String toString() {
-        return "Ride{" +
+        return "Ride {" +
                 "rider=" + rider.getName() +
                 ", driver=" + driver.getName() +
                 ", source='" + source + '\'' +
@@ -69,5 +70,60 @@ public class Ride {
                 ", fare=" + fare +
                 ", status=" + status +
                 '}';
+    }
+
+    public static class RideBuilder{
+        private String rideId;
+        private Rider rider;
+        private Driver driver;
+        private double distance;
+        private String source;
+        private String dest;
+        private FareStrategy farestr;
+        private PaymentStrategy paystr;
+
+        public RideBuilder setRiderId(String riderId){
+            this.rideId=riderId;
+            return this;
+        }
+        public RideBuilder setRider(Rider rider){
+            this.rider=rider;
+            return this;
+        }
+        public RideBuilder setDriver(Driver driver){
+            this.driver=driver;
+            return this;
+        }
+        public RideBuilder setDistance(double distance) {
+            this.distance = distance;
+            return this;
+        }
+
+        public RideBuilder setSource(String source) {
+            this.source = source;
+            return this;
+        }
+
+        public RideBuilder setDest(String dest) {
+            this.dest = dest;
+            return this;
+        }
+
+        public RideBuilder setFareStrategy(FareStrategy farestr) {
+            this.farestr = farestr;
+            return this;
+        }
+
+        public RideBuilder setPaymentStrategy(PaymentStrategy paystr) {
+            this.paystr = paystr;
+            return this;
+        }
+        public Ride build(){
+            if(farestr==null) farestr=new NormalFare();
+            if(rider==null || driver==null ||paystr==null){
+                throw  new IllegalStateException("Missing required fields for Ride");
+            }
+            return new Ride(this);
+        }
     }
 }

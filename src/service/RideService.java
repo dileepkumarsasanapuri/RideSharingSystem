@@ -2,7 +2,9 @@ package service;
 import model.*;
 import observer.NotificationService;
 import strategy.fare.FareStrategy;
+import strategy.fare.NormalFare;
 import strategy.matching.DriverMatchingStrategy;
+import strategy.payment.CashPayment;
 import strategy.payment.PaymentStrategy;
 
 import java.util.ArrayList;
@@ -43,7 +45,17 @@ public class RideService {
         matchedDriver.setAvailable(false);
 
         String rideId= UUID.randomUUID().toString();
-        Ride ride=new Ride(rideId,rider,matchedDriver,distance,src,dest,fsr,psr);
+        Ride ride=new Ride.RideBuilder()
+                .setRiderId(rideId)
+                .setRider(rider)
+                .setDriver(matchedDriver)
+                .setDistance(14.3)
+                .setSource("MG Road")
+                .setDest("Airport")
+                .setFareStrategy(new NormalFare())
+                .setPaymentStrategy(new CashPayment())
+                .build();
+
         rides.add(ride);
 
         nfs.notify(rider,"Ride Booked ! Ride Id:"+rideId+" with Driver "+matchedDriver.getName()+" of Fare: "+ride.getFare());
