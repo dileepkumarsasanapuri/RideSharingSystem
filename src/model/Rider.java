@@ -1,13 +1,15 @@
 package model;
 
-import observer.Notifier;
-public class Rider extends User implements Notifier {
+
+import java.io.Serializable;
+
+public class Rider extends User implements Serializable {
     public Rider(String id,String name,String email,String phone,String location){
         super(id,name,email,phone,location);
     }
 
     @Override
-    public  void update(String msg){
-        System.out.println("Rider "+name+" Notification: "+msg);
+    public String toString() {
+        return "Rider{" + "id='" + id + '\'' + ", name='" + name + '\'' + '}';
     }
 }

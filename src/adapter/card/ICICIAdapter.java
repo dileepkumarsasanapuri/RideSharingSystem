@@ -1,22 +1,27 @@
 package adapter.card;
 
-import strategy.payment.PaymentStrategy;
 
-class ICICIGateway{
-    public void payWithICICI(double amt,String cardNo){
-        System.out.println("ICICI Card "+cardNo+" paid Rs."+amt);
+
+
+public class ICICIAdapter implements CardAdapter {
+    class ICICIGateway{
+        public void payWithICICI(double amt,String cardNo){
+            System.out.println("ICICI Card "+mask(cardNo)+" paid Rs."+amt);
+        }
     }
-}
-public class ICICIAdapter implements PaymentStrategy {
    private ICICIGateway icici;
-   private String cardNo;
-   public ICICIAdapter(String cardNo){
+
+   public ICICIAdapter(){
        this.icici=new ICICIGateway();
-       this.cardNo=cardNo;
+
    }
+    private String mask(String s) {
+        if (s == null || s.length() < 4) return "****";
+        return "****-****-****-" + s.substring(s.length() - 4);
+    }
 
    @Override
-    public void pay(double amt){
+    public void payWithCard(double amt,String cardNo){
        icici.payWithICICI(amt,cardNo);
    }
 }

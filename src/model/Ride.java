@@ -3,7 +3,11 @@ package model;
 import strategy.fare.FareStrategy;
 import strategy.fare.NormalFare;
 
-public class Ride {
+import java.io.Serializable;
+import java.util.UUID;
+
+public class Ride implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String rideId;
     private Rider rider;
     private Driver driver;
@@ -15,11 +19,15 @@ public class Ride {
     private FareStrategy farestr;
 
     public Ride(RideBuilder builder){
+        if (builder.rider == null || builder.driver == null) throw new IllegalArgumentException("rider/driver cannot be null");
+        if (builder.source == null || builder.dest == null) throw new IllegalArgumentException("source/destination required");
+        if (builder.distance <= 0) throw new IllegalArgumentException("distance must be > 0");
+
         this.distance=builder.distance;
         this.rider=builder.rider;
         this.source=builder.source;
         this.dest=builder.dest;
-        this.rideId=builder.rideId;
+        this.rideId=builder.rideId != null ? builder.rideId : UUID.randomUUID().toString();
         this.driver=builder.driver;
         this.farestr=builder.farestr;
 
@@ -51,11 +59,14 @@ public class Ride {
         return dest;
     }
 
-
-
-    public void completeRide(){
-        this.status=RideStatus.COMPLETED;
+    public double getDistance() {
+        return distance;
     }
+
+    public void setStatus(RideStatus status) { this.status = status; }
+
+
+
 
 
 
@@ -81,8 +92,8 @@ public class Ride {
         private FareStrategy farestr;
 
 
-        public RideBuilder setRiderId(String riderId){
-            this.rideId=riderId;
+        public RideBuilder setRideId(){
+            this.rideId= UUID.randomUUID().toString();
             return this;
         }
         public RideBuilder setRider(Rider rider){
@@ -115,7 +126,8 @@ public class Ride {
 
 
         public Ride build(){
-            if(farestr==null) farestr=new NormalFare();
+            if (this.rideId == null) setRideId();
+            if(farestr==null) farestr=new NormalFare(20,12);
 
             if(rider==null || driver==null){
                 throw  new IllegalStateException("Missing required fields for Ride");

@@ -2,22 +2,28 @@ package adapter.card;
 
 import strategy.payment.PaymentStrategy;
 
-class SBIGateway{
-    public void payWithSBI(double amt,String cardNo) {
-        System.out.println("SBI Card " + cardNo + " paid Rs." + amt);
-    }
-}
 
-public class SBIAdapter implements PaymentStrategy {
+
+public class SBIAdapter implements CardAdapter {
+    class SBIGateway{
+        public void payWithSBI(double amt,String cardNo) {
+            System.out.println("SBI Card " + mask(cardNo) + " paid Rs." + amt);
+        }
+    }
     private SBIGateway sbi;
-    private String cardNo;
-    public SBIAdapter(String cardNo){
+
+    public SBIAdapter(){
         this.sbi=new SBIGateway();
-        this.cardNo=cardNo;
+
     }
 
+    private String mask(String s) {
+        if (s == null || s.length() < 4) return "****";
+        return "****-****-****-" + s.substring(s.length() - 4);
+    }
     @Override
-    public void pay(double amt){
+    public void payWithCard(double amt,String cardNo)
+    {
         sbi.payWithSBI(amt,cardNo);
     }
 }

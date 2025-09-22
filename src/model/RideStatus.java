@@ -1,6 +1,10 @@
 package model;
 
-public enum RideStatus {
+import java.io.Serializable;
+
+public enum RideStatus implements Serializable {
+    REQUESTED,
     ONGOING,
-    COMPLETED
+    COMPLETED,
+    CANCELLED
 }

@@ -1,23 +1,22 @@
 package observer;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import model.Driver;
+import model.Rider;
+
+
 public class NotificationService {
-    private List<Notifier> obs=new ArrayList<>();
+    private final Notifier notifier;
 
-    public void addObserver(Notifier ob){
-        obs.add(ob);
+    public NotificationService(Notifier notifier) {
+        this.notifier = notifier;
     }
 
-    public void notifyAll(String msg){
-        for(Notifier ob:obs){
-            ob.update(msg);
-        }
-    }
-    public void notify(Notifier dr,String msg){
-        dr.update(msg);
+    public void notifyRider(Rider rider, String message) {
+        notifier.notifyRider(rider, message);
     }
 
-
+    public void notifyDriver(Driver driver, String message) {
+        notifier.notifyDriver(driver, message);
+    }
 }

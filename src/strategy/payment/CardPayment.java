@@ -1,13 +1,17 @@
 package strategy.payment;
 
 public class CardPayment implements PaymentStrategy {
-    private String cardNo;
-    public CardPayment(String cardNo){
+    private final String providerName;
+    private final String cardNo;
+    private final adapter.card.CardAdapter adapter;
+    public CardPayment(String providerName,String cardNo,adapter.card.CardAdapter adapter){
         this.cardNo=cardNo;
+        this.providerName=providerName;
+        this.adapter=adapter;
     }
 
     @Override
-    public void pay(double amt){
-        System.out.println("Payment of Rs."+amt+" made by Card Payment using card ending with "+cardNo.substring(cardNo.length()-4)+" . ");
+    public void pay(double amt) throws Exception{
+        adapter.payWithCard(amt,cardNo);
     }
 }

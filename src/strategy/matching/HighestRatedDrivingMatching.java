@@ -9,9 +9,8 @@ import java.util.List;
 
 public class HighestRatedDrivingMatching implements DriverMatchingStrategy {
     @Override
-    public Driver matchDriver(Rider rider, List<Driver> availableDrivers){
-        return availableDrivers.stream()
-                .max(Comparator.comparingDouble(Driver::getRating))
-                .orElse(null);
+    public Driver matchDriver(List<Driver> drivers) {
+        if (drivers == null || drivers.isEmpty()) return null;
+        return drivers.stream().max(Comparator.comparingDouble(Driver::getRating)).orElse(null);
     }
 }

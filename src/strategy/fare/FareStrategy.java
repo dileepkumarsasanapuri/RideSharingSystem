@@ -1,5 +1,7 @@
 package strategy.fare;
 
-public interface FareStrategy {
+import java.io.Serializable;
+
+public interface FareStrategy extends Serializable {
     double calculateFare(double distance);
 }
